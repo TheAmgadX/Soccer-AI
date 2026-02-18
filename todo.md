@@ -1,0 +1,17 @@
+# Plan
+
+- set the basics for the graphics with AI [+]
+- set project structure [+]
+- implement Vector class [+]
+- implement steering behaviours needed []
+- implement the state machine []
+- implement the base game entity class []
+- implement the moving entity class []
+- implement the soccer pitch class []
+- implement teh soccer team class []
+- implement the soccer ball class []
+- implement the enitites classes []
+- integrate the graphics with the game and move them from main.cc to proper files []
+- design the state machine states []
+- implement states []
+- implement support spot calculator []
