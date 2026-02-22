@@ -1,6 +1,6 @@
 #pragma once
 
-#include "utils/constants.h"
+#include "../utils/constants.h"
 #include <cmath>
 
 class Vector {
@@ -205,6 +205,17 @@ inline Vector PointToWorldSpace(const Vector &localPoint,
                                 const Vector &agentSide,
                                 const Vector &agentPos) {
     return agentPos + (agentHeading * localPoint.x) + (agentSide * localPoint.y);
+}
+
+inline void VecRotateAroundOrigin(Vector& v, double angle) {
+    double cosA = std::cos(angle);
+    double sinA = std::sin(angle);
+
+    double x = v.x * cosA - v.y * sinA;
+    double y = v.x * sinA + v.y * cosA;
+
+    v.x = x;
+    v.y = y;
 }
 
 //

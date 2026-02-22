@@ -1,6 +1,6 @@
-#pragma once 
-#include "math/vector.h"
-#include "state_machine/message.h"
+#pragma once
+#include "../math/vector.h"
+#include "../state_machine/message.h"
 
 class Entity {
     int m_Id;
@@ -38,7 +38,7 @@ public:
     int Id() const {
         return m_Id;
     }
-    
+
     void Tag() {
         m_Tag = true;
     }

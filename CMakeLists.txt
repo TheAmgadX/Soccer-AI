@@ -26,7 +26,9 @@ FetchContent_MakeAvailable(googletest)
 # .cc files here.
 set (
     COMMON_SOURCES
-
+    src/game/steering_behavs.cc
+    src/game/soccer_pitch.cc
+    src/game/entities/soccer_ball.cc
 )
 
 # Add tests
@@ -35,9 +37,10 @@ list(FILTER TEST_SOURCES EXCLUDE REGEX "tests/main.cc") # Exclude the old manual
 
 add_executable(soccer_ai
     src/main.cc
+    ${COMMON_SOURCES}
 )
 
-add_executable(run_tests ${TEST_SOURCES})
+add_executable(run_tests ${TEST_SOURCES} ${COMMON_SOURCES})
 
 target_include_directories(soccer_ai PRIVATE
     ${PROJECT_SOURCE_DIR}/include
@@ -48,7 +51,7 @@ target_include_directories(run_tests PRIVATE
 )
 
 target_link_libraries(soccer_ai PRIVATE SDL2::SDL2)
-target_link_libraries(run_tests PRIVATE 
+target_link_libraries(run_tests PRIVATE
     SDL2::SDL2
     GTest::gtest_main
 )

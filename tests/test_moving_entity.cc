@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "game/moving_entity.h"
+#include "utils/time_system.h"
 #include <cmath>
 
 // Concrete implementation because MovingEntity is abstract
@@ -7,8 +8,8 @@ class TestMovingEntity : public MovingEntity {
 public:
     TestMovingEntity() : MovingEntity() {}
 
-    TestMovingEntity(Vector pos, double radius, Vector velocity, Vector heading, double max_speed, double max_force, double max_turn) 
-        : MovingEntity(pos, radius, velocity, heading, max_speed, max_force, max_turn) {}
+    TestMovingEntity(Vector pos, double radius, Vector velocity, Vector heading, double max_speed, double max_force, double max_turn)
+        : MovingEntity(pos, radius, velocity, heading, max_speed, max_force, max_turn, TimeSystem::Instance()) {}
 
     void Update() override {
         // Simple integration for testing
@@ -48,7 +49,7 @@ TEST(MovingEntityTest, SetVelocityTruncatesSpeed) {
     // Use parameterized constructor
     TestMovingEntity e2(Vector(), 0, Vector(), Vector(0,1), maxSpeed, 0, 0);
     e2.SetVelocity(velocity);
-    
+
     EXPECT_DOUBLE_EQ(e2.Speed(), maxSpeed);
     EXPECT_DOUBLE_EQ(e2.Velocity().Length(), 10.0);
 }

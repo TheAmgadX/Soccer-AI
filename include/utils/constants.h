@@ -109,6 +109,9 @@ constexpr int BALL_OUTLINE_THICKNESS = 2;
 constexpr int BALL_SHADOW_OFFSET_X = 1;
 constexpr int BALL_SHADOW_OFFSET_Y = 1;
 
+constexpr double BALL_MAX_SPEED = 10.0;
+constexpr double BALL_MAX_FORCE = 100.0;
+constexpr double BALL_TURN_RATE = 1.0;
 
 //
 // ------------------ Default / Demo Positions ------------------
@@ -125,11 +128,21 @@ constexpr int TEAM_X_SPACING = 90;
 constexpr int TEAM_Y_SPACING = 80;
 
 
-// 
+//
 // ------------------ Vector Constants ------------------
 //
 constexpr double MinDouble = std::numeric_limits<double>::min();
 
 constexpr double Epsilon = std::numeric_limits<double>::epsilon();
+
+constexpr double FRICTION = -0.5;
+
+constexpr double AntennaLength = 4.0;
+
+constexpr double MinDetectionBoxLength = 5.0;
+
+constexpr double KickAccuracy = 0.9;
+
+constexpr double Restitution = 0.8;
 
 } // namespace constants
