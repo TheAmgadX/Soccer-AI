@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../utils/constants.h"
+#include <algorithm>
 #include <cmath>
 
 class Vector {
@@ -159,22 +160,9 @@ inline double VecLengthSQ(const Vector &v) { return v.x * v.x + v.y * v.y; }
 
 inline double VecLength(const Vector &v) { return sqrt(VecLengthSQ(v)); }
 
-inline void WrapAround(Vector &pos, int MaxX, int MaxY) {
-    if (pos.x > MaxX) {
-        pos.x = 0.0;
-    }
-
-    if (pos.x < 0) {
-        pos.x = (double)MaxX;
-    }
-
-    if (pos.y < 0) {
-        pos.y = (double)MaxY;
-    }
-
-    if (pos.y > MaxY) {
-        pos.y = 0.0;
-    }
+inline void ValidatePitchBoundaries(Vector &pos) {
+    pos.x = std::clamp(pos.x, double(constants::PITCH_LEFT), double(constants::PITCH_RIGHT));
+    pos.y = std::clamp(pos.y, double(constants::PITCH_TOP), double(constants::PITCH_BOTTOM));
 }
 
 inline bool NotInsideRegion(Vector p, Vector top_left, Vector bot_rgt) {

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <limits>
+#include <cstdint>
 
 namespace constants {
 
@@ -135,14 +136,46 @@ constexpr double MinDouble = std::numeric_limits<double>::min();
 
 constexpr double Epsilon = std::numeric_limits<double>::epsilon();
 
-constexpr double FRICTION = -0.5;
+constexpr double FRICTION = -0.5; // TODO: assign proper value for this.
 
-constexpr double AntennaLength = 4.0;
+constexpr double AntennaLength = 4.0; // TODO: assign proper value for this.
 
-constexpr double MinDetectionBoxLength = 5.0;
+constexpr double MinDetectionBoxLength = 5.0; // TODO: assign proper value for this.
+
+//
+// ------------------ Game AI Constants ------------------
+//
 
 constexpr double KickAccuracy = 0.9;
 
 constexpr double Restitution = 0.8;
+
+constexpr uint8_t ATTEMPS_TO_FIND_SHOT_POS = 5;
+
+constexpr double UPDATE_SUPPORT_SPOT_INTERVAL = 0.5; // TODO: assign proper value for this.
+
+constexpr double Max_Passing_Force = 100.0; // TODO: assign proper value for this.
+
+constexpr double MAX_SHOT_FORCE = 150.0; // TODO: assign proper value for this.
+
+constexpr double MIN_DISTANCE_TO_SUPPORT_PLAYER = 10.0; // TODO: assign proper value for this.
+
+constexpr double MAX_DISTANCE_TO_SUPPORT_PLAYER = 30.0; // TODO: assign proper value for this.
+
+// --- constants for determining the best supporting spot.
+constexpr double SAFE_PASS_RATE = 2.0;
+
+constexpr double CAN_SHOT_RATE = 4.0;
+
+
+constexpr double DISTANCE_BETWEEN_PLAYERS_RATE = 1.0;
+
+//
+// ----------------- Messaging Constants ------------------
+//
+
+constexpr int SEND_MESSAGE_NOW = -1;
+
+
 
 } // namespace constants

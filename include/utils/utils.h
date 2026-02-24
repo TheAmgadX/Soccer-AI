@@ -8,4 +8,18 @@ namespace Utils {
 
         return dist(rng);
     }
+
+    inline double Range(double min, double max) {
+        static std::mt19937_64 rng(std::random_device{}()); // seeded once
+        std::uniform_real_distribution<double> dist(min, max);
+
+        return dist(rng);
+    }
+
+    inline int RandomInt(int min, int max) {
+        static std::mt19937_64 rng(std::random_device{}()); // seeded once
+        std::uniform_int_distribution<int> dist(min, max);
+
+        return dist(rng);
+    }
 }

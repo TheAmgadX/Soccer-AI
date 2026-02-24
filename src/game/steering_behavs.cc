@@ -243,7 +243,8 @@ void SteeringBehaviors::FindIntersectionPlayers(SoccerTeam *team,
 
     for (size_t i = 0; i < constants::PLAYERS_PER_TEAM; ++i) {
         if (p_Player == team->m_Players[i])
-        continue;
+            continue;
+
         Player *player = team->m_Players[i];
 
         Vector player_future_pos =

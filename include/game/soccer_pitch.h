@@ -4,7 +4,8 @@
 #include "../utils/wall.h"
 #include "entities/soccer_ball.h"
 #include "goal.h"
-#include "soccer_team.h"
+
+class SoccerTeam;
 
 class SoccerPitch {
 private:

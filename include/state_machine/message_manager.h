@@ -1,7 +1,7 @@
 #pragma once
-#include "game/entity_manager.h"
+#include "../game/entity_manager.h"
 #include "message.h"
-#include "utils/time_system.h"
+#include "../utils/time_system.h"
 
 #include <set>
 
