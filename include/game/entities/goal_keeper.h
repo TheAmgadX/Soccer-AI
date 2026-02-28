@@ -1,4 +1,4 @@
-#pragma  once
+#pragma once
 
 #include "game/entities/player.h"
 
@@ -7,6 +7,7 @@ public:
     GoalKeeper();
     ~GoalKeeper();
 
-
     virtual bool InHome() const override;
+
+    virtual void Update() override;
 };

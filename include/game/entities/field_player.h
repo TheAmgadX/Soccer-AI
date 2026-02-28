@@ -8,4 +8,6 @@ public:
     ~FieldPlayer();
 
     virtual bool InHome() const override;
+
+    virtual void Update() override;
 };

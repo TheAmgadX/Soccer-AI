@@ -1,5 +1,6 @@
 #pragma once
 #include "../math/vector.h"
+#include "../utils/constants.h"
 
 class Goal {
 private:
@@ -9,49 +10,42 @@ private:
     Vector m_Center;
 
     int m_Score;
+
 public:
-    Goal(Vector right, Vector left, Vector facing) :
-        m_Right(right), m_Left(left), m_Facing(facing), m_Center((right + left) * 0.5), m_Score(0) {}
+    Goal(Vector right, Vector left, Vector facing)
+        : m_Right(right), m_Left(left), m_Facing(facing),
+            m_Center(Vector(right.x, constants::FIELD_CENTER_Y)), m_Score(0) {}
 
     ~Goal() {}
 
     inline bool CheckGoal(const Vector ballPosition) {
-        if(ballPosition.x == m_Right.x){
-            // since the left and right changes based on the facing, we must consider both cases.
+        if (ballPosition.x == m_Right.x) {
+        // since the left and right changes based on the facing, we must consider
+        // both cases.
 
-            // if the left goal.
-            if(ballPosition.y >= m_Right.y && ballPosition.y <= m_Left.y){
-                m_Score++;
-                return true;
-            }
+        // if the left goal.
+        if (ballPosition.y >= m_Right.y && ballPosition.y <= m_Left.y) {
+            m_Score++;
+            return true;
+        }
 
-            // if the right goal.
-            if(ballPosition.y >= m_Left.y && ballPosition.y <= m_Right.y){
-                m_Score++;
-                return true;
-            }
+        // if the right goal.
+        if (ballPosition.y >= m_Left.y && ballPosition.y <= m_Right.y) {
+            m_Score++;
+            return true;
+        }
         }
 
         return false;
     }
 
-    inline Vector Right() const {
-        return m_Right;
-    }
+    inline Vector Right() const { return m_Right; }
 
-    inline Vector Left() const {
-        return m_Left;
-    }
+    inline Vector Left() const { return m_Left; }
 
-    inline Vector Center() const {
-        return m_Center;
-    }
+    inline Vector Center() const { return m_Center; }
 
-    inline Vector Facing() const {
-        return m_Facing;
-    }
+    inline Vector Facing() const { return m_Facing; }
 
-    inline int Score() const {
-        return m_Score;
-    }
+    inline int Score() const { return m_Score; }
 };

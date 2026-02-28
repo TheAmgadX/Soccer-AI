@@ -170,6 +170,9 @@ constexpr double CAN_SHOT_RATE = 4.0;
 
 constexpr double DISTANCE_BETWEEN_PLAYERS_RATE = 1.0;
 
+constexpr int NUM_OF_REGIONS_PER_ROW = 6;
+constexpr int NUM_OF_REGIONS_PER_COLUMN = 3;
+
 //
 // ----------------- Messaging Constants ------------------
 //

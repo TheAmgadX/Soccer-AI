@@ -29,6 +29,10 @@ set (
     src/game/steering_behavs.cc
     src/game/soccer_pitch.cc
     src/game/entities/soccer_ball.cc
+    src/game/soccer_team.cc
+    src/game/entities/player.cc
+    src/game/entities/field_player.cc
+    src/game/entities/goal_keeper.cc
 )
 
 # Add tests

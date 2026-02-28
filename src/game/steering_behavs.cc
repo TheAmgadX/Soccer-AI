@@ -1,4 +1,6 @@
 #include "game/steering_behavs.h"
+#include "game/soccer_pitch.h"
+#include "game/soccer_team.h"
 #include "math/vector.h"
 #include <algorithm>
 
@@ -47,7 +49,7 @@ Vector SteeringBehaviors::SumForces() {
         force += Seek();
 
         if (!CheckAccumulateForce(force)) {
-            return m_SteeringForce;
+        return m_SteeringForce;
         }
     }
 
@@ -55,7 +57,7 @@ Vector SteeringBehaviors::SumForces() {
         force += Arrive();
 
         if (!CheckAccumulateForce(force)) {
-            return m_SteeringForce;
+        return m_SteeringForce;
         }
     }
 
@@ -63,7 +65,7 @@ Vector SteeringBehaviors::SumForces() {
         force += PursuitBall();
 
         if (!CheckAccumulateForce(force)) {
-            return m_SteeringForce;
+        return m_SteeringForce;
         }
     }
 
@@ -71,7 +73,7 @@ Vector SteeringBehaviors::SumForces() {
         force += Interpose();
 
         if (!CheckAccumulateForce(force)) {
-            return m_SteeringForce;
+        return m_SteeringForce;
         }
     }
 
@@ -201,9 +203,9 @@ Vector SteeringBehaviors::AvoidWalls() {
 
     for (size_t ant = 0; ant < 3; ++ant) {
         for (size_t i = 0; i < 4; ++i) {
-        if (DetectIntersection(
-                p_Player->Pos(), m_Antennas[ant], p_Pitch->m_Walls[i].From(),
-                p_Pitch->m_Walls[i].To(), point, distance_to_ip)) {
+        if (DetectIntersection(p_Player->Pos(), m_Antennas[ant],
+                                p_Pitch->m_Walls[i].From(),
+                                p_Pitch->m_Walls[i].To(), point, distance_to_ip)) {
 
             if (distance_to_closest_ip > distance_to_ip) {
             closest_point = point;
@@ -234,8 +236,7 @@ void SteeringBehaviors::FindIntersectionPlayers(SoccerTeam *team,
                                                 double detection_box_len,
                                                 bool &found) {
 
-    Vector detection_box_point =
-        p_Player->Pos() + (p_Player->Heading() * detection_box_len);
+    Vector detection_box_point = p_Player->Pos() + (p_Player->Heading() * detection_box_len);
 
     // temp variables used in the loop.
     double distance_to_ip = -1;
@@ -253,11 +254,11 @@ void SteeringBehaviors::FindIntersectionPlayers(SoccerTeam *team,
         if (DetectIntersection(p_Player->Pos(), detection_box_point, player->Pos(),
                             player_future_pos, point, distance_to_ip)) {
 
-        if (dist_to_closest_piont > distance_to_ip) {
-            closest_intersect_point = point;
-            dist_to_closest_piont = distance_to_ip;
-            found = true;
-        }
+            if (dist_to_closest_piont > distance_to_ip) {
+                closest_intersect_point = point;
+                dist_to_closest_piont = distance_to_ip;
+                found = true;
+            }
         }
     }
 }
