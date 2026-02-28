@@ -1,10 +1,14 @@
-#pragma once 
+#pragma once
+
+enum Messages {
+    msgPassToMe, msgReceiveBall, msgSupport, msgGotoHome, msgWait
+};
 
 class Message {
 public:
     int sender, receiver, msg;
 
-    double time; 
+    double time;
 
     void* extraInfo;
 

@@ -100,6 +100,9 @@ constexpr float PLAYER_WING_ANGLE_OFFSET = 2.52f;
 
 constexpr int PLAYER_OUTLINE_THICKNESS = 2;
 
+constexpr double PLAYER_RADIUS = 20.0f;
+
+constexpr float PLAYER_TURN_RATE = 1.0f; // TODO: set proper value for this
 
 //
 // ------------------ Ball Visuals ------------------
@@ -154,19 +157,22 @@ constexpr uint8_t ATTEMPS_TO_FIND_SHOT_POS = 5;
 
 constexpr double UPDATE_SUPPORT_SPOT_INTERVAL = 0.5; // TODO: assign proper value for this.
 
+constexpr double MAX_DISTANCE_TO_SUPPORT_PLAYER = 20.0; // TODO: assign proper value for this.
+
+constexpr double MIN_DISTANCE_TO_SUPPORT_PLAYER = 10.0; // TODO: assign proper value for this.
+
 constexpr double Max_Passing_Force = 100.0; // TODO: assign proper value for this.
 
 constexpr double MAX_SHOT_FORCE = 150.0; // TODO: assign proper value for this.
 
-constexpr double MIN_DISTANCE_TO_SUPPORT_PLAYER = 10.0; // TODO: assign proper value for this.
+constexpr double PLAYER_MAX_SPEED = 100.0; // TODO: assign proper value for this.
 
-constexpr double MAX_DISTANCE_TO_SUPPORT_PLAYER = 30.0; // TODO: assign proper value for this.
+constexpr double PLAYER_MAX_FORCE = 100.0; // TODO: assign proper value for this.
 
 // --- constants for determining the best supporting spot.
 constexpr double SAFE_PASS_RATE = 2.0;
 
 constexpr double CAN_SHOT_RATE = 4.0;
-
 
 constexpr double DISTANCE_BETWEEN_PLAYERS_RATE = 1.0;
 

@@ -33,7 +33,6 @@ public:
                      void *extra_info) {
         Message message = Message(sender, receiver, msg, delay, extra_info);
         Entity *receiverEntity = entityMgr->GetEntity(receiver);
-        Entity *senderEntity = entityMgr->GetEntity(sender);
 
         if (!receiverEntity) {
             return;
