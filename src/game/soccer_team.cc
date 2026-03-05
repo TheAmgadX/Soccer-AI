@@ -44,6 +44,10 @@ void SoccerTeam::Update() {
 
     m_StateMachine.Update();
 
+    if(p_ControllingPlayer) {
+        DetermineBestSupportingPlayer();
+    }
+
     for (auto& player : m_Players) {
         player->Update();
     }
@@ -108,9 +112,6 @@ void SoccerTeam::CheckSpot(Spot &spot) const {
 }
 
 Vector SoccerTeam::GetBestSupportSpot() {
-    if(!m_BestSupportSpot.isZero())
-        return m_BestSupportSpot;
-
     if(Timer->g_Time - m_TimeSinceLastUpdateToSupportSpot < constants::UPDATE_SUPPORT_SPOT_INTERVAL) {
         return m_BestSupportSpot;
     }

@@ -74,7 +74,29 @@ public:
 
     StateMachine<SoccerTeam> FSM() { return m_StateMachine; }
 
+    inline SoccerPitch* Pitch() const { return p_Pitch; }
+
+    inline Goal* HomeGoal() const { return p_HomeGoal; }
+
+    inline Goal* AwayGoal() const { return p_AwayGoal; }
+
+    inline Player* ReceivingPlayer() const { return p_ReceivingPlayer; }
+
+    inline Player* SupportingPlayer() const { return p_SupportingPlayer; }
+
+    inline void SetSupportingPlayer(Player* player) { p_SupportingPlayer = player; }
+
+    inline void setControllingPlayer(Player* player) { p_ControllingPlayer = player; }
+
+    inline void SetReceivingPlayer(Player* player) { p_ReceivingPlayer = player; }
+
+    bool InControl() const { return p_ControllingPlayer != nullptr; }
+
     void DetermineBestSupportingPlayer();
+
+    inline Vector BestSupportingSpot() {
+        return m_BestSupportSpot;
+    }
 
     void ReturnFieldPlayersToHome();
 

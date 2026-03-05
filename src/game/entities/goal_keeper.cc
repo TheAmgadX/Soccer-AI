@@ -8,10 +8,6 @@ GoalKeeper::~GoalKeeper() {
 
 }
 
-bool GoalKeeper::InHome() const {
-
-}
-
 void GoalKeeper::Update() {
 
 }

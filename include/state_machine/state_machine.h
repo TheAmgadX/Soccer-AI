@@ -1,6 +1,7 @@
 #pragma once
 #include "state.h"
 #include <assert.h>
+#include <type_traits>
 
 template <class entity_type>
 class StateMachine {
@@ -29,11 +30,11 @@ public:
 
     void Update() const {
         if (p_GlobalState) {
-        p_GlobalState->Process(p_Owner);
+            p_GlobalState->Process(p_Owner);
         }
 
         if (p_CurrentState) {
-        p_CurrentState->Process(p_Owner);
+            p_CurrentState->Process(p_Owner);
         }
     }
 
@@ -45,5 +46,9 @@ public:
         p_CurrentState = _state;
 
         p_CurrentState->Enter(p_Owner);
+    }
+
+    bool IsInState(State<entity_type>* state) {
+        return state == p_CurrentState;
     }
 };

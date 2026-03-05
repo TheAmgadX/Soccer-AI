@@ -11,7 +11,3 @@ FieldPlayer::~FieldPlayer() {
 void FieldPlayer::Update() {
 
 }
-
-bool FieldPlayer::InHome() const {
-
-}

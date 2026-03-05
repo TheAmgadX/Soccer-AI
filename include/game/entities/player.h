@@ -2,16 +2,36 @@
 
 #include "../../math/vector.h"
 #include "../moving_entity.h"
+#include "game/soccer_pitch.h"
+#include "soccer_ball.h"
+#include "utils/region.h"
+
+class SteeringBehaviors;
+class SoccerTeam;
+
 
 class Player : public MovingEntity {
 public:
+    enum PlayerRole {
+        GOALKEEPER,
+        DEFENDER,
+        ATTACKER
+    };
+
+private:
+
+    SoccerTeam* p_Team;
+    SteeringBehaviors* p_SteeringBehaviors;
+
+    int m_CurrentRegion;
+    int m_HomeRegion;
+    double m_DistanceToBallSQ;
+    PlayerRole m_Role;
+
+public:
     Player() : MovingEntity() {}
 
-    Player(Vector _pos, double _radius, Vector _velocity, Vector _heading,
-            double max_speed, double max_force, double turn_rate,
-            TimeSystem *_timer)
-        : MovingEntity(_pos, _radius, _velocity, _heading, max_speed, max_force,
-                        turn_rate, _timer) {}
+    Player(SoccerTeam* team, int home_region, PlayerRole role, Vector _heading);
 
     virtual ~Player() = 0;
 
@@ -23,5 +43,31 @@ public:
         return m_Pos + m_Velocity * time;
     }
 
-    virtual bool InHome() const = 0;
+    SteeringBehaviors* Steering() { return p_SteeringBehaviors; }
+
+    SoccerTeam* Team() const { return p_Team; }
+
+    void SetDefaultHomeRegion() { m_CurrentRegion = m_HomeRegion; }
+
+    virtual bool InHome() const { return m_CurrentRegion == m_HomeRegion; }
+
+    Region HomeRegion() const;
+
+    SoccerBall* Ball() const;
+
+    SoccerPitch* Pitch() const;
+
+    bool isClosestToBall() const;
+
+    bool BallWithinReceivingRange() const;
+
+    bool BallWithinKickingRange() const;
+
+    bool isControllingPlayer() const;
+
+    bool isThreatened() const;
+
+    bool AtTarget() const;
+
+    void TrackBall();
 };

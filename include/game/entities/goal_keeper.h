@@ -7,7 +7,5 @@ public:
     GoalKeeper();
     ~GoalKeeper();
 
-    virtual bool InHome() const override;
-
     virtual void Update() override;
 };

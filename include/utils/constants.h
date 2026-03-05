@@ -161,11 +161,17 @@ constexpr double MAX_DISTANCE_TO_SUPPORT_PLAYER = 20.0; // TODO: assign proper v
 
 constexpr double MIN_DISTANCE_TO_SUPPORT_PLAYER = 10.0; // TODO: assign proper value for this.
 
+constexpr double MIN_PASS_DISTANCE = 5.0; // TODO: assign proper value for this.
+
 constexpr double Max_Passing_Force = 100.0; // TODO: assign proper value for this.
+
+constexpr double MAX_DRIBBLE_FORCE = 0.8; // TODO: assign proper value for this.
 
 constexpr double MAX_SHOT_FORCE = 150.0; // TODO: assign proper value for this.
 
 constexpr double PLAYER_MAX_SPEED = 100.0; // TODO: assign proper value for this.
+
+constexpr double PLAYER_MAX_SPEED_WITH_BALL = 80.0; // TODO: assign proper value for this.
 
 constexpr double PLAYER_MAX_FORCE = 100.0; // TODO: assign proper value for this.
 

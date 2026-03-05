@@ -84,6 +84,30 @@ public:
         m_Flags |= interpose;
     }
 
+    void SeekOff() {
+        if(On(seek)) {
+            m_Flags ^= seek;
+        }
+    }
+
+    void ArriveOff() {
+        if(On(arrive)) {
+            m_Flags ^= arrive;
+        }
+    }
+
+    void PersuitOff() {
+        if(On(persuit)) {
+            m_Flags ^= persuit;
+        }
+    }
+
+    void InterposeOff() {
+        if(On(interpose)) {
+            m_Flags ^= interpose;
+        }
+    }
+
     Vector Target() {
         return m_Target;
     }

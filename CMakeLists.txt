@@ -28,11 +28,14 @@ set (
     COMMON_SOURCES
     src/game/steering_behavs.cc
     src/game/soccer_pitch.cc
-    src/game/entities/soccer_ball.cc
     src/game/soccer_team.cc
+
+    src/game/entities/soccer_ball.cc
     src/game/entities/player.cc
     src/game/entities/field_player.cc
     src/game/entities/goal_keeper.cc
+
+    src/state_machine/states/field_player_states/field_player_states.cc
 )
 
 # Add tests
