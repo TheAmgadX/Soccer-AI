@@ -26,6 +26,7 @@ FetchContent_MakeAvailable(googletest)
 # .cc files here.
 set (
     COMMON_SOURCES
+    src/game/graphics/visualizer.cc
     src/game/steering_behavs.cc
     src/game/soccer_pitch.cc
     src/game/soccer_team.cc

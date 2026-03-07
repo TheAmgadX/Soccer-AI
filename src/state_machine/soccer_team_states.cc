@@ -35,7 +35,7 @@ void Attacking::Exit(SoccerTeam* team) {
 
 void Attacking::Process(SoccerTeam* team) {
     if(!team->InControl()) {
-        team->FSM().ChangeState(Defending::Instance());
+        team->FSM()->ChangeState(Defending::Instance());
         return;
     }
 
@@ -63,7 +63,7 @@ void Defending::Exit(SoccerTeam* team) {}
 
 void Defending::Process(SoccerTeam* team) {
     if (team->InControl()) {
-        team->FSM().ChangeState(Attacking::Instance());
+        team->FSM()->ChangeState(Attacking::Instance());
         return;
     }
 }
@@ -83,11 +83,16 @@ void PrepareForKickOff::Enter(SoccerTeam* team) {
 }
 
 void PrepareForKickOff::Exit(SoccerTeam* team) {
-    team->Pitch()->SetGameOn(true);
+    (void)team;
 }
 
 void PrepareForKickOff::Process(SoccerTeam* team) {
     if(team->AllPlayersAtHome() && team->Opponent()->AllPlayersAtHome()) {
-        team->FSM().ChangeState(Defending::Instance());
+        if (team->Opponent()->FSM()->IsInState(PrepareForKickOff::Instance())) {
+            team->Opponent()->FSM()->ChangeState(Defending::Instance());
+        }
+
+        team->FSM()->ChangeState(Defending::Instance());
+        team->Pitch()->SetGameOn(true);
     }
 }

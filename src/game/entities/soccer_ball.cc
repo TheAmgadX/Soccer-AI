@@ -58,6 +58,22 @@ void SoccerBall::PlaceAtPos(const Vector &pos) {
 
 void SoccerBall::CheckCollisionWithWalls() {
   for (const Wall &wall : m_Walls) {
+    // Do not bounce on the side goal-mouth opening, so the ball can cross
+    // the goal line and be detected as a goal.
+    const bool is_vertical_wall = std::fabs(wall.From().x - wall.To().x) < constants::Epsilon;
+    if (is_vertical_wall) {
+      const double wall_x = wall.From().x;
+      const bool is_side_goal_line =
+          std::fabs(wall_x - constants::LEFT_GOAL_X) < constants::Epsilon ||
+          std::fabs(wall_x - constants::RIGHT_GOAL_X) < constants::Epsilon;
+
+      if (is_side_goal_line &&
+          m_Pos.y >= constants::GOAL_TOP_Y - m_Radius &&
+          m_Pos.y <= constants::GOAL_BOTTOM_Y + m_Radius) {
+        continue;
+      }
+    }
+
     // based on vector projection.
     Vector wall_to_ball = m_Pos - wall.From();
 

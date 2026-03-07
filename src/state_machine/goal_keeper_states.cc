@@ -14,6 +14,24 @@
 #include "state_machine/states/goal_keeper_states/put_ball_back.h"
 #include "state_machine/states/goal_keeper_states/return_home.h"
 
+namespace {
+bool BallInKeeperPriorityZone(const GoalKeeper* entity) {
+    const Vector ball_pos = entity->Ball()->Pos();
+
+    const double top = constants::FIELD_CENTER_Y - (constants::PENALTY_BOX_HEIGHT * 0.5);
+    const double bottom = constants::FIELD_CENTER_Y + (constants::PENALTY_BOX_HEIGHT * 0.5);
+    if (ball_pos.y < top || ball_pos.y > bottom) {
+        return false;
+    }
+
+    if (entity->Team()->Color() == SoccerTeam::BLUE) {
+        return ball_pos.x <= constants::PITCH_LEFT + constants::PENALTY_BOX_DEPTH;
+    }
+
+    return ball_pos.x >= constants::PITCH_RIGHT - constants::PENALTY_BOX_DEPTH;
+}
+} // namespace
+
 // ----------------------------------------
 // ---------------- Global ----------------
 // ----------------------------------------
@@ -28,7 +46,9 @@ bool GoalKeeperGlobal::onMessage(GoalKeeper* entity, const Message& msg) {
         case MessageEnum::msgNULL:
             return false;
         case MessageEnum::msgReceiveBall:
-            entity->FSM()->ChangeState(GoalKeeperIntercept::Instance());
+            if (!entity->Team()->InControl() && BallInKeeperPriorityZone(entity)) {
+                entity->FSM()->ChangeState(GoalKeeperIntercept::Instance());
+            }
             return true;
         case MessageEnum::msgGotoHome:
             entity->FSM()->ChangeState(GoalKeeperReturnHome::Instance());
@@ -46,7 +66,7 @@ void GoalKeeperIntercept::Enter(GoalKeeper* entity) {
 }
 
 void GoalKeeperIntercept::Process(GoalKeeper* entity) {
-    if(!entity->isClosestToBall()) {
+    if(!entity->isClosestToBall() || !BallInKeeperPriorityZone(entity)) {
         entity->FSM()->ChangeState(GoalKeeperReturnHome::Instance());
         return;
     }
@@ -86,7 +106,8 @@ void GoalKeeperProtectGoal::Process(GoalKeeper* entity) {
         return;
     }
 
-    if(entity->BallWithinInterceptRange() && !entity->Team()->InControl()) {
+    if(!entity->Team()->InControl() && entity->isClosestToBall() &&
+       BallInKeeperPriorityZone(entity)) {
         entity->FSM()->ChangeState(GoalKeeperIntercept::Instance());
         return;
     }
@@ -116,15 +137,25 @@ void GoalKeeperPutBallBackInPlay::Process(GoalKeeper* entity) {
     Vector ball_target;
 
     if(entity->Team()->FindPass(entity, receiver, ball_target, constants::Max_Passing_Force, constants::MIN_PASS_DISTANCE)) {
-        entity->Ball()->Kick(ball_target, constants::Max_Passing_Force);
+        Vector pass_direction = ball_target - entity->Ball()->Pos();
+        entity->Ball()->Kick(pass_direction, constants::Max_Passing_Force);
         entity->Pitch()->SetGoalKeeperHasBall(false);
 
         Vector* pass_location = new Vector(ball_target); // TODO: this is not deleted anywhere, you should handle it later after finishing the project.
 
         MsgMgr->SendMessage(entity->Id(), receiver->Id(), MessageEnum::msgReceiveBall, constants::SEND_MESSAGE_NOW, pass_location);
 
+        entity->Team()->setControllingPlayer(nullptr);
         entity->FSM()->ChangeState(GoalKeeperProtectGoal::Instance());
+        return;
     }
+
+    // Fallback: clear long to avoid deadlock when no pass is available.
+    Vector clear_direction = entity->Team()->AwayGoal()->Center() - entity->Ball()->Pos();
+    entity->Ball()->Kick(clear_direction, constants::MAX_SHOT_FORCE);
+    entity->Pitch()->SetGoalKeeperHasBall(false);
+    entity->Team()->setControllingPlayer(nullptr);
+    entity->FSM()->ChangeState(GoalKeeperProtectGoal::Instance());
 }
 
 void GoalKeeperPutBallBackInPlay::Exit(GoalKeeper* entity) {}
@@ -138,7 +169,7 @@ void GoalKeeperReturnHome::Enter(GoalKeeper* entity) {
 }
 
 void GoalKeeperReturnHome::Process(GoalKeeper* entity) {
-    if(entity->InHome() || !entity->Team()->InControl()) {
+    if(entity->InHome()) {
         entity->FSM()->ChangeState(GoalKeeperProtectGoal::Instance());
     }
 }

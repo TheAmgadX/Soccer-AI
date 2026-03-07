@@ -102,7 +102,7 @@ constexpr int PLAYER_OUTLINE_THICKNESS = 2;
 
 constexpr double PLAYER_RADIUS = 20.0f;
 
-constexpr float PLAYER_TURN_RATE = 1.0f; // TODO: set proper value for this
+constexpr float PLAYER_TURN_RATE = 3.5f;
 
 //
 // ------------------ Ball Visuals ------------------
@@ -113,9 +113,9 @@ constexpr int BALL_OUTLINE_THICKNESS = 2;
 constexpr int BALL_SHADOW_OFFSET_X = 1;
 constexpr int BALL_SHADOW_OFFSET_Y = 1;
 
-constexpr double BALL_MAX_SPEED = 10.0;
-constexpr double BALL_MAX_FORCE = 100.0;
-constexpr double BALL_TURN_RATE = 1.0;
+constexpr double BALL_MAX_SPEED = 120.0;
+constexpr double BALL_MAX_FORCE = 160.0;
+constexpr double BALL_TURN_RATE = 6.0;
 
 //
 // ------------------ Default / Demo Positions ------------------
@@ -139,60 +139,60 @@ constexpr double MinDouble = std::numeric_limits<double>::min();
 
 constexpr double Epsilon = std::numeric_limits<double>::epsilon();
 
-constexpr double FRICTION = -0.5; // TODO: assign proper value for this.
+constexpr double FRICTION = -0.45;
 
-constexpr double AntennaLength = 4.0; // TODO: assign proper value for this.
+constexpr double AntennaLength = 28.0;
 
-constexpr double MinDetectionBoxLength = 5.0; // TODO: assign proper value for this.
+constexpr double MinDetectionBoxLength = 30.0;
 
 //
 // ------------------ Game AI Constants ------------------
 //
 
-constexpr double KickAccuracy = 0.9;
+constexpr double KickAccuracy = 1.0;
 
-constexpr double Restitution = 0.8;
+constexpr double Restitution = 0.75;
 
-constexpr uint8_t ATTEMPS_TO_FIND_SHOT_POS = 5;
+constexpr uint8_t ATTEMPS_TO_FIND_SHOT_POS = 24;
 
-constexpr double UPDATE_SUPPORT_SPOT_INTERVAL = 0.5; // TODO: assign proper value for this.
+constexpr double UPDATE_SUPPORT_SPOT_INTERVAL = 0.2;
 
-constexpr double MAX_DISTANCE_TO_SUPPORT_PLAYER = 20.0; // TODO: assign proper value for this.
+constexpr double MAX_DISTANCE_TO_SUPPORT_PLAYER = 1000.0;
 
-constexpr double MIN_DISTANCE_TO_SUPPORT_PLAYER = 10.0; // TODO: assign proper value for this.
+constexpr double MIN_DISTANCE_TO_SUPPORT_PLAYER = 50.0;
 
-constexpr double MIN_PASS_DISTANCE = 5.0; // TODO: assign proper value for this.
+constexpr double MIN_PASS_DISTANCE = 50.0;
 
-constexpr double Max_Passing_Force = 100.0; // TODO: assign proper value for this.
+constexpr double Max_Passing_Force = 115.0;
 
-constexpr double MAX_DRIBBLE_FORCE = 0.8; // TODO: assign proper value for this.
+constexpr double MAX_DRIBBLE_FORCE = 20.0;
 
-constexpr double MAX_SHOT_FORCE = 150.0; // TODO: assign proper value for this.
+constexpr double MAX_SHOT_FORCE = 240.0;
 
-constexpr double PLAYER_MAX_SPEED = 100.0; // TODO: assign proper value for this.
+constexpr double PLAYER_MAX_SPEED = 100.0;
 
-constexpr double PLAYER_MAX_SPEED_WITH_BALL = 80.0; // TODO: assign proper value for this.
+constexpr double PLAYER_MAX_SPEED_WITH_BALL = 100.0;
 
-constexpr double PLAYER_MAX_FORCE = 100.0; // TODO: assign proper value for this.
+constexpr double PLAYER_MAX_FORCE = 85.0;
 
-constexpr double PLAYER_IN_TARGET_RANGE_SQ = 4.0 * 4.0; // TODO: assign proper value for this.
+constexpr double PLAYER_IN_TARGET_RANGE_SQ = 8.0 * 8.0;
 
-constexpr double BALL_WITHIN_RECEIVING_RANGE_SQ = 2.0 * 2.0; // TODO: assign proper value for this.
+constexpr double BALL_WITHIN_RECEIVING_RANGE_SQ = 34.0 * 34.0;
 
-constexpr double BALL_WITHIN_KICKING_RANGE_SQ = 3.0 * 3.0; // TODO: assign proper value for this.
+constexpr double BALL_WITHIN_KICKING_RANGE_SQ = 28.0 * 28.0;
 
-constexpr double PLAYER_THREATENING_RANGE_SQ = 5.0 * 5.0; // TODO: assign proper value for this.
+constexpr double PLAYER_THREATENING_RANGE_SQ = 75.0 * 75.0;
 
-constexpr double PROTECT_GOAL_DISTANCE = 10.0; // TODO: assign proper value for this.
+constexpr double PROTECT_GOAL_DISTANCE = 20.0;
 
-constexpr double KEEPER_RANGE_SQ = 225.0; // TODO: assign proper value for this.
+constexpr double KEEPER_RANGE_SQ = 5.0 * 5.0;
 
-constexpr double INTERCEPT_RANGE_SQ = 400.0; // TODO: assign proper value for this.
+constexpr double INTERCEPT_RANGE_SQ = 10.0 * 10.0;
 
 // --- constants for determining the best supporting spot.
-constexpr double SAFE_PASS_RATE = 2.0;
+constexpr double SAFE_PASS_RATE = 5.0;
 
-constexpr double CAN_SHOT_RATE = 4.0;
+constexpr double CAN_SHOT_RATE = 10.0;
 
 constexpr double DISTANCE_BETWEEN_PLAYERS_RATE = 1.0;
 

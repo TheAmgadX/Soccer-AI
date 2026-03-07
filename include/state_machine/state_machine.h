@@ -18,10 +18,7 @@ public:
                 State<entity_type> *_global)
         : p_Owner(_owner), p_CurrentState(_state), p_GlobalState(_global) {}
 
-    ~StateMachine() {
-        delete p_CurrentState;
-        delete p_GlobalState;
-    }
+    ~StateMachine() {}
 
     State<entity_type> *CurrentState() { return p_CurrentState; }
 

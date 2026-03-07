@@ -58,7 +58,8 @@ private:
 
 public:
     SteeringBehaviors(Player* _player, SoccerBall* _ball, SoccerPitch* _pitch) :p_Player(_player), p_Ball(_ball),
-        p_Pitch(_pitch), m_SteeringForce(Vector()), m_Target(Vector()), m_InterposeDistance(0.0) {
+        p_Pitch(_pitch), m_SteeringForce(Vector()), m_Target(Vector()), m_InterposeDistance(0.0),
+        m_Flags(none) {
         m_Antennas.resize(3);
         CreateAntennas(constants::AntennaLength);
     }

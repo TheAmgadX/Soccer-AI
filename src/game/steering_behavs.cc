@@ -6,8 +6,7 @@
 
 bool SteeringBehaviors::AccumulateForce(const Vector &force) {
     double magnitude = m_SteeringForce.Length();
-
-    double remaining_magnitude = p_Player->MaxForce();
+    double remaining_magnitude = p_Player->MaxForce() - magnitude;
 
     if (remaining_magnitude <= 0.0) {
         return false;
@@ -19,14 +18,12 @@ bool SteeringBehaviors::AccumulateForce(const Vector &force) {
         force_magnitude = remaining_magnitude;
     }
 
-    m_SteeringForce += Vector(VecNormalize(force) * force_magnitude);
+    m_SteeringForce += VecNormalize(force) * force_magnitude;
 
     return true;
 }
 
 bool SteeringBehaviors::CheckAccumulateForce(const Vector &force) {
-    m_SteeringForce += force;
-
     return AccumulateForce(force);
 }
 
@@ -39,14 +36,14 @@ Vector SteeringBehaviors::SumForces() {
         return m_SteeringForce;
     }
 
-    force += AvoidWalls();
+    force = AvoidWalls();
 
     if (!CheckAccumulateForce(force)) {
         return m_SteeringForce;
     }
 
     if (On(seek)) {
-        force += Seek();
+        force = Seek();
 
         if (!CheckAccumulateForce(force)) {
         return m_SteeringForce;
@@ -54,7 +51,7 @@ Vector SteeringBehaviors::SumForces() {
     }
 
     if (On(arrive)) {
-        force += Arrive();
+        force = Arrive();
 
         if (!CheckAccumulateForce(force)) {
         return m_SteeringForce;
@@ -62,7 +59,7 @@ Vector SteeringBehaviors::SumForces() {
     }
 
     if (On(persuit)) {
-        force += PursuitBall();
+        force = PursuitBall();
 
         if (!CheckAccumulateForce(force)) {
         return m_SteeringForce;
@@ -70,7 +67,7 @@ Vector SteeringBehaviors::SumForces() {
     }
 
     if (On(interpose)) {
-        force += Interpose();
+        force = Interpose();
 
         if (!CheckAccumulateForce(force)) {
         return m_SteeringForce;
@@ -82,6 +79,7 @@ Vector SteeringBehaviors::SumForces() {
 
 Vector SteeringBehaviors::Calculate() {
     m_SteeringForce.Zero();
+    CreateAntennas(constants::AntennaLength);
 
     m_SteeringForce = SumForces();
 
@@ -144,26 +142,28 @@ Vector SteeringBehaviors::PursuitBall() {
 
 Vector SteeringBehaviors::Interpose() {
     Vector target_to_ball = VecNormalize(p_Ball->Pos() - m_Target);
+    Vector base_target = m_Target;
+    m_Target = base_target + target_to_ball * m_InterposeDistance;
+    Vector interpose_force = Arrive();
+    m_Target = base_target;
 
-    m_Target += target_to_ball * m_InterposeDistance;
-
-    return Arrive();
+    return interpose_force;
 }
 
 void SteeringBehaviors::CreateAntennas(const double length) {
-    // antenna pointing straight in front
-    m_Antennas[0] = p_Player->Pos() + length * p_Player->Heading();
+    // Antennas are vectors relative to player position.
+    m_Antennas[0] = length * p_Player->Heading();
 
     // antenna to left
     Vector temp = p_Player->Heading();
 
     VecRotateAroundOrigin(temp, M_PI_2 * 3.5f);
-    m_Antennas[1] = p_Player->Pos() + length / 2.0f * temp;
+    m_Antennas[1] = length / 2.0f * temp;
 
     // antenna to right
     temp = p_Player->Heading();
     VecRotateAroundOrigin(temp, M_PI_2 * 0.5f);
-    m_Antennas[2] = p_Player->Pos() + length / 2.0f * temp;
+    m_Antennas[2] = length / 2.0f * temp;
 }
 
 bool SteeringBehaviors::DetectIntersection(const Vector &origin,
@@ -217,7 +217,7 @@ Vector SteeringBehaviors::AvoidWalls() {
 
         if (closest_wall != -1) {
         // how much the antenna passed the wall.
-        Vector over_shoot = m_Antennas[ant] - closest_point;
+        Vector over_shoot = (p_Player->Pos() + m_Antennas[ant]) - closest_point;
 
         // create a force in the direction of wall normal with a magnitude of
         // over_shoot
@@ -236,7 +236,7 @@ void SteeringBehaviors::FindIntersectionPlayers(SoccerTeam *team,
                                                 double detection_box_len,
                                                 bool &found) {
 
-    Vector detection_box_point = p_Player->Pos() + (p_Player->Heading() * detection_box_len);
+    Vector detection_box = p_Player->Heading() * detection_box_len;
 
     // temp variables used in the loop.
     double distance_to_ip = -1;
@@ -248,10 +248,9 @@ void SteeringBehaviors::FindIntersectionPlayers(SoccerTeam *team,
 
         Player *player = team->m_Players[i];
 
-        Vector player_future_pos =
-            player->Pos() + (player->Heading() * detection_box_len);
+        Vector player_future_pos = player->Pos() + (player->Heading() * detection_box_len);
 
-        if (DetectIntersection(p_Player->Pos(), detection_box_point, player->Pos(),
+        if (DetectIntersection(p_Player->Pos(), detection_box, player->Pos(),
                             player_future_pos, point, distance_to_ip)) {
 
             if (dist_to_closest_piont > distance_to_ip) {

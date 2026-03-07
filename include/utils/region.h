@@ -22,7 +22,7 @@ public:
 
     Region(double top, double bottom, double left, double right, int id)
         : m_Top(top), m_Bottom(bottom), m_Left(left), m_Right(right),
-        m_Width(right - left), m_Height(top - bottom),
+        m_Width(right - left), m_Height(bottom - top),
         m_Center((left + right) * 0.5, (top + bottom) * 0.5), m_Id(id) {}
 
     inline Vector GetRandomPos() const;
@@ -50,5 +50,5 @@ bool Region::Inside(const Vector& pos) const {
 }
 
 Vector Region::GetRandomPos() const {
-    return Vector(Utils::Range(m_Left, m_Right), Utils::Range(m_Bottom, m_Top));
+    return Vector(Utils::Range(m_Left, m_Right), Utils::Range(m_Top, m_Bottom));
 }

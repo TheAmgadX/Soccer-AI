@@ -6,6 +6,8 @@
 #include "game/steering_behavs.h"
 #include "game/soccer_team.h"
 
+#include <algorithm>
+
 GoalKeeper::GoalKeeper(SoccerTeam* team, int home_region, Vector _heading) : Player(team, home_region, _heading) {
     p_StateMachine = new StateMachine<GoalKeeper>(this, GoalKeeperReturnHome::Instance(), GoalKeeperGlobal::Instance());
     p_StateMachine->CurrentState()->Enter(this);
@@ -24,7 +26,8 @@ void GoalKeeper::Update() {
 
     m_Velocity.Truncate(m_MaxSpeed);
 
-    m_Pos += m_Velocity;
+    m_Pos += m_Velocity * Timer->g_TimeElapsed;
+    ValidatePitchBoundaries(m_Pos);
 
     if(!m_Velocity.isZero()) {
         m_Heading = VecNormalize(m_Velocity);
@@ -33,7 +36,18 @@ void GoalKeeper::Update() {
     }
 
     if(!Pitch()->GoalKeeperHasBall()) {
-        RotateHeading(Ball()->Pos() - m_Pos);
+        RotateHeading(Ball()->Pos());
+    }
+}
+
+void GoalKeeper::HandleMessage(const Message &message) {
+    if (p_StateMachine->GlobalState() &&
+        p_StateMachine->GlobalState()->onMessage(this, message)) {
+        return;
+    }
+
+    if (p_StateMachine->CurrentState()) {
+        p_StateMachine->CurrentState()->onMessage(this, message);
     }
 }
 
@@ -48,7 +62,7 @@ Vector GoalKeeper::GetRearInterposeTarget() const {
             break;
     }
 
-    double y = Ball()->Pos().y;
+    double y = std::clamp(Ball()->Pos().y, constants::GOAL_BOTTOM_Y + 20.0, constants::GOAL_TOP_Y + 20.0);
 
     return Vector(x, y);
 }

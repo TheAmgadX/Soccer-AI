@@ -14,6 +14,7 @@ public:
     ~FieldPlayer();
 
     virtual void Update() override;
+    virtual void HandleMessage(const Message &message) override;
 
     StateMachine<FieldPlayer>* FSM() const { return p_StateMachine; }
 

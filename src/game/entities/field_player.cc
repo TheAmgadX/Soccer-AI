@@ -30,5 +30,17 @@ void FieldPlayer::Update() {
         m_Side = m_Heading.Perp();
     }
 
-    m_Pos += m_Velocity;
+    m_Pos += m_Velocity * Timer->g_TimeElapsed;
+    ValidatePitchBoundaries(m_Pos);
+}
+
+void FieldPlayer::HandleMessage(const Message &message) {
+    if (p_StateMachine->GlobalState() &&
+        p_StateMachine->GlobalState()->onMessage(this, message)) {
+        return;
+    }
+
+    if (p_StateMachine->CurrentState()) {
+        p_StateMachine->CurrentState()->onMessage(this, message);
+    }
 }

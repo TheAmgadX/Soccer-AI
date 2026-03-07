@@ -29,6 +29,8 @@ public:
   SoccerPitch();
   ~SoccerPitch();
 
+  void Initialize();
+
   bool GameOn() const { return m_GameOn; }
   void SetGameOn(bool value) { m_GameOn = value; }
 

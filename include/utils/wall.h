@@ -39,9 +39,9 @@ public:
         double right_corner_down_x = constants::PITCH_WIDTH + constants::PITCH_MARGIN;
         double right_corner_down_y = constants::PITCH_HEIGHT + constants::PITCH_MARGIN;
 
-        // bottom
-        walls.emplace_back(Wall(Vector(left_corner_down_x, left_corner_down_y),
-            Vector(right_corner_down_x, right_corner_down_y)));
+        // bottom (ordered right->left so normal points up, into the pitch)
+        walls.emplace_back(Wall(Vector(right_corner_down_x, right_corner_down_y),
+            Vector(left_corner_down_x, left_corner_down_y)));
 
         // right
         walls.emplace_back(Wall(Vector(right_corner_up_x, right_corner_up_y),
@@ -51,9 +51,9 @@ public:
         walls.emplace_back(Wall(Vector(left_corner_up_x, left_corner_up_y),
             Vector(right_corner_up_x, right_corner_up_y)));
 
-        // left
-        walls.emplace_back(Wall(Vector(left_corner_up_x, left_corner_up_y),
-            Vector(left_corner_down_x, left_corner_down_y)));
+        // left (ordered down->up so normal points right, into the pitch)
+        walls.emplace_back(Wall(Vector(left_corner_down_x, left_corner_down_y),
+            Vector(left_corner_up_x, left_corner_up_y)));
 
         return walls;
     }

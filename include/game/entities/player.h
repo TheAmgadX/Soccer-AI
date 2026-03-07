@@ -40,9 +40,12 @@ public:
 
     void SetDefaultHomeRegion() { m_CurrentRegion = m_HomeRegion; }
 
-    void SetHomeRegion(uint region) { m_CurrentRegion = region; }
+    void SetHomeRegion(int region) {
+        m_HomeRegion = region;
+        m_CurrentRegion = region;
+    }
 
-    virtual bool InHome() const { return m_CurrentRegion == m_HomeRegion; }
+    virtual bool InHome() const { return HomeRegion().Inside(m_Pos); }
 
     Region HomeRegion() const;
 

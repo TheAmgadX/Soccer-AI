@@ -16,7 +16,7 @@ private:
     SoccerPitch *p_Pitch;
     SoccerTeam *p_Opponent;
 
-    StateMachine<SoccerTeam> m_StateMachine;
+    StateMachine<SoccerTeam>* p_StateMachine;
     TeamColor m_Color;
 
     Player *p_GoalKeeper;
@@ -24,6 +24,7 @@ private:
     Player *p_ReceivingPlayer;
     Player *p_PlayerClosestToBall;
     Player *p_SupportingPlayer;
+    Player *p_SecondarySupportingPlayer;
     double m_DistanceSQToBallFromClosestPlayer;
 
     Vector m_BestSupportSpot;
@@ -64,7 +65,11 @@ public:
             p_Opponent(nullptr), m_Color(color), p_GoalKeeper(nullptr),
             p_ControllingPlayer(nullptr), p_ReceivingPlayer(nullptr),
             p_PlayerClosestToBall(nullptr),
-            m_DistanceSQToBallFromClosestPlayer(0.0) {}
+            p_SupportingPlayer(nullptr),
+            p_SecondarySupportingPlayer(nullptr),
+            m_DistanceSQToBallFromClosestPlayer(0.0),
+            m_BestSupportSpot(Vector()),
+            m_TimeSinceLastUpdateToSupportSpot(0.0) {}
 
     ~SoccerTeam();
 
@@ -74,7 +79,7 @@ public:
 
     TeamColor Color() const { return m_Color; }
 
-    StateMachine<SoccerTeam> FSM() { return m_StateMachine; }
+    StateMachine<SoccerTeam>* FSM() { return p_StateMachine; }
 
     inline SoccerPitch* Pitch() const { return p_Pitch; }
 
@@ -87,10 +92,25 @@ public:
     inline Player* ReceivingPlayer() const { return p_ReceivingPlayer; }
 
     inline Player* SupportingPlayer() const { return p_SupportingPlayer; }
+    inline Player* SecondarySupportingPlayer() const { return p_SecondarySupportingPlayer; }
 
     inline Player* ControllingPlayer() const { return p_ControllingPlayer; }
 
-    inline void SetSupportingPlayer(Player* player) { p_SupportingPlayer = player; }
+    inline void SetSupportingPlayer(Player* player) {
+        p_SupportingPlayer = player;
+        if (player == nullptr) {
+            p_SecondarySupportingPlayer = nullptr;
+        }
+    }
+    inline void SetSecondarySupportingPlayer(Player* player) { p_SecondarySupportingPlayer = player; }
+    inline void ClearSupportingPlayer(const Player* player) {
+        if (p_SupportingPlayer == player) {
+            p_SupportingPlayer = nullptr;
+        }
+        if (p_SecondarySupportingPlayer == player) {
+            p_SecondarySupportingPlayer = nullptr;
+        }
+    }
 
     inline void setControllingPlayer(Player* player) { p_ControllingPlayer = player; }
 
@@ -107,6 +127,7 @@ public:
     inline Vector BestSupportingSpot() {
         return m_BestSupportSpot;
     }
+    Vector SupportSpotFor(const Player* player) const;
 
     void ReturnFieldPlayersToHome();
 

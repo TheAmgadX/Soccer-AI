@@ -11,6 +11,7 @@ public:
     ~GoalKeeper();
 
     virtual void Update() override;
+    virtual void HandleMessage(const Message &message) override;
 
     inline StateMachine<GoalKeeper>* FSM() const { return p_StateMachine; }
 

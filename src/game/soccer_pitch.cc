@@ -9,11 +9,13 @@
 #include "utils/wall.h"
 #include <cstddef>
 
-SoccerPitch::SoccerPitch() : m_GoalKeeperHasBall(false), m_GameOn(false) {
+SoccerPitch::SoccerPitch() : m_GoalKeeperHasBall(false), m_GameOn(false) {}
+
+void SoccerPitch::Initialize() {
     m_Walls = Wall::CreateWalls();
 
-    Vector ball_pos = Vector((double)constants::PITCH_WIDTH / 2.0,
-                            (double)constants::PITCH_HEIGHT / 2.0);
+    Vector ball_pos = Vector((double)constants::FIELD_CENTER_X,
+                            (double)constants::FIELD_CENTER_Y);
 
     p_Ball = new SoccerBall(ball_pos, constants::BALL_RADIUS, m_Walls, Timer);
 
@@ -27,40 +29,41 @@ SoccerPitch::SoccerPitch() : m_GoalKeeperHasBall(false), m_GameOn(false) {
     Vector red_left = Vector((double)constants::RIGHT_GOAL_X, (double)constants::GOAL_BOTTOM_Y);
     Vector red_facing = Vector(-1.0, 0.0);
 
-    Goal *blue_goal = new Goal(blue_right, blue_left, blue_facing);
-    Goal *red_goal = new Goal(red_right, red_left, red_facing);
+    p_BlueGoal = new Goal(blue_right, blue_left, blue_facing);
+    p_RedGoal = new Goal(red_right, red_left, red_facing);
 
-    p_BlueTeam = new SoccerTeam(SoccerTeam::TeamColor::BLUE, blue_goal, red_goal, this);
-    p_RedTeam = new SoccerTeam(SoccerTeam::TeamColor::RED, red_goal, blue_goal, this);
+    p_BlueTeam = new SoccerTeam(SoccerTeam::TeamColor::BLUE, p_BlueGoal, p_RedGoal, this);
+    p_RedTeam = new SoccerTeam(SoccerTeam::TeamColor::RED, p_RedGoal, p_BlueGoal, this);
+
+    CreatePitchRegions();
 
     p_BlueTeam->Initialize(p_RedTeam);
     p_RedTeam->Initialize(p_BlueTeam);
 
-    CreatePitchRegions();
 
     p_PlayingArea = new Region(constants::PITCH_TOP, constants::PITCH_BOTTOM,
                                 constants::PITCH_LEFT, constants::PITCH_RIGHT, -1);
 }
 
 void SoccerPitch::Update() {
-    if (!m_GameOn)
-        return;
-
     Timer->Update();
 
-    p_Ball->Update();
+    if (m_GameOn) {
+        p_Ball->Update();
+    }
 
     p_BlueTeam->Update();
     p_RedTeam->Update();
 
-    if (p_RedGoal->CheckGoal(p_Ball->Pos()) || p_BlueGoal->CheckGoal(p_Ball->Pos())) {
+    if (m_GameOn &&
+        (p_RedGoal->CheckGoal(p_Ball->Pos()) || p_BlueGoal->CheckGoal(p_Ball->Pos()))) {
         m_GameOn = false;
 
-        p_Ball->PlaceAtPos(Vector((double)constants::PITCH_WIDTH / 2.0,
-                                (double)constants::PITCH_HEIGHT / 2.0));
+        p_Ball->PlaceAtPos(Vector((double)constants::FIELD_CENTER_X,
+                                (double)constants::FIELD_CENTER_Y));
 
-        p_RedTeam->FSM().ChangeState(PrepareForKickOff::Instance());
-        p_BlueTeam->FSM().ChangeState(PrepareForKickOff::Instance());
+        p_RedTeam->FSM()->ChangeState(PrepareForKickOff::Instance());
+        p_BlueTeam->FSM()->ChangeState(PrepareForKickOff::Instance());
     }
 }
 

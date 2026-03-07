@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 #include "../math/vector.h"
 #include "../utils/constants.h"
 
@@ -19,21 +20,25 @@ public:
     ~Goal() {}
 
     inline bool CheckGoal(const Vector ballPosition) {
-        if (ballPosition.x == m_Right.x) {
-        // since the left and right changes based on the facing, we must consider
-        // both cases.
+        const double top_y = std::min(m_Right.y, m_Left.y);
+        const double bottom_y = std::max(m_Right.y, m_Left.y);
+        const bool inside_goal_y = ballPosition.y >= top_y && ballPosition.y <= bottom_y;
 
-        // if the left goal.
-        if (ballPosition.y >= m_Right.y && ballPosition.y <= m_Left.y) {
-            m_Score++;
-            return true;
+        if (!inside_goal_y) {
+            return false;
         }
 
-        // if the right goal.
-        if (ballPosition.y >= m_Left.y && ballPosition.y <= m_Right.y) {
-            m_Score++;
-            return true;
-        }
+        // Left goal faces right (+x), right goal faces left (-x).
+        if (m_Facing.x > 0.0) {
+            if (ballPosition.x <= m_Right.x + constants::BALL_RADIUS) {
+                m_Score++;
+                return true;
+            }
+        } else {
+            if (ballPosition.x >= m_Right.x - constants::BALL_RADIUS) {
+                m_Score++;
+                return true;
+            }
         }
 
         return false;
