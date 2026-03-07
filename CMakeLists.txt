@@ -35,7 +35,9 @@ set (
     src/game/entities/field_player.cc
     src/game/entities/goal_keeper.cc
 
-    src/state_machine/states/field_player_states/field_player_states.cc
+    src/state_machine/field_player_states.cc
+    src/state_machine/goal_keeper_states.cc
+    src/state_machine/soccer_team_states.cc
 )
 
 # Add tests
@@ -58,6 +60,7 @@ target_include_directories(run_tests PRIVATE
 )
 
 target_link_libraries(soccer_ai PRIVATE SDL2::SDL2)
+
 target_link_libraries(run_tests PRIVATE
     SDL2::SDL2
     GTest::gtest_main

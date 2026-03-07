@@ -7,7 +7,7 @@ private:
     FieldPlayerSupport() {}
 
 public:
-    ~FieldPlayerSupport();
+    ~FieldPlayerSupport() = default;
 
     virtual void Enter(FieldPlayer* Entity) override;
     virtual void Exit(FieldPlayer* Entity) override;

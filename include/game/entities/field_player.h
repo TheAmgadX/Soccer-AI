@@ -9,7 +9,7 @@ class FieldPlayer : public Player {
     double kick_limit;
 
 public:
-    FieldPlayer();
+    FieldPlayer(SoccerTeam* team, int home_region, Vector _heading);
 
     ~FieldPlayer();
 

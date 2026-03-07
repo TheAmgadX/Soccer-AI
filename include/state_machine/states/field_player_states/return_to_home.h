@@ -7,7 +7,7 @@ private:
     FieldPlayerReturnToHome() {}
 
 public:
-    ~FieldPlayerReturnToHome();
+    ~FieldPlayerReturnToHome() = default;
 
     virtual void Enter(FieldPlayer* Entity) override;
     virtual void Exit(FieldPlayer* Entity) override;

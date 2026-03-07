@@ -123,8 +123,8 @@ constexpr double BALL_TURN_RATE = 1.0;
 constexpr int BALL_START_X = FIELD_CENTER_X;
 constexpr int BALL_START_Y = FIELD_CENTER_Y;
 
-constexpr int RED_TEAM_START_X = PITCH_LEFT + 140;
-constexpr int BLUE_TEAM_START_X = PITCH_RIGHT - 140;
+constexpr int RED_TEAM_START_X =  PITCH_RIGHT + 140;
+constexpr int BLUE_TEAM_START_X = PITCH_LEFT - 140;
 
 constexpr int TEAM_START_Y = PITCH_TOP + 80;
 
@@ -175,6 +175,20 @@ constexpr double PLAYER_MAX_SPEED_WITH_BALL = 80.0; // TODO: assign proper value
 
 constexpr double PLAYER_MAX_FORCE = 100.0; // TODO: assign proper value for this.
 
+constexpr double PLAYER_IN_TARGET_RANGE_SQ = 4.0 * 4.0; // TODO: assign proper value for this.
+
+constexpr double BALL_WITHIN_RECEIVING_RANGE_SQ = 2.0 * 2.0; // TODO: assign proper value for this.
+
+constexpr double BALL_WITHIN_KICKING_RANGE_SQ = 3.0 * 3.0; // TODO: assign proper value for this.
+
+constexpr double PLAYER_THREATENING_RANGE_SQ = 5.0 * 5.0; // TODO: assign proper value for this.
+
+constexpr double PROTECT_GOAL_DISTANCE = 10.0; // TODO: assign proper value for this.
+
+constexpr double KEEPER_RANGE_SQ = 225.0; // TODO: assign proper value for this.
+
+constexpr double INTERCEPT_RANGE_SQ = 400.0; // TODO: assign proper value for this.
+
 // --- constants for determining the best supporting spot.
 constexpr double SAFE_PASS_RATE = 2.0;
 
@@ -190,7 +204,7 @@ constexpr int NUM_OF_REGIONS_PER_COLUMN = 3;
 //
 
 constexpr int SEND_MESSAGE_NOW = -1;
-
+constexpr int GAME_ID = 0;
 
 
 } // namespace constants

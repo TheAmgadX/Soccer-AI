@@ -7,7 +7,7 @@ private:
     FieldPlayerChase() {}
 
 public:
-    ~FieldPlayerChase();
+    ~FieldPlayerChase() = default;
 
     virtual void Enter(FieldPlayer* Entity) override;
     virtual void Exit(FieldPlayer* Entity) override;

@@ -7,7 +7,7 @@ private:
     FieldPlayerDribble() {}
 
 public:
-    ~FieldPlayerDribble();
+    ~FieldPlayerDribble() = default;
 
     virtual void Enter(FieldPlayer* Entity) override;
     virtual void Exit(FieldPlayer* Entity) override;

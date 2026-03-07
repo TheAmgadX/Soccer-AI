@@ -24,15 +24,15 @@ public:
 
   bool m_GoalKeeperHasBall;
   bool m_GameOn;
-  bool m_GamePause;
 
 public:
   SoccerPitch();
   ~SoccerPitch();
 
   bool GameOn() const { return m_GameOn; }
-  bool GamePause() const { return m_GamePause; }
-  bool GoalKeeperHasBall() const { return m_GoalKeeperHasBall; }
+  void SetGameOn(bool value) { m_GameOn = value; }
 
+  bool GoalKeeperHasBall() const { return m_GoalKeeperHasBall; }
+  void SetGoalKeeperHasBall(bool value) { m_GoalKeeperHasBall = value; }
   void Update();
 };

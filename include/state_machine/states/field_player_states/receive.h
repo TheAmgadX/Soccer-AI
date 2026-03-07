@@ -7,7 +7,7 @@ private:
     FieldPlayerReceive() {}
 
 public:
-    ~FieldPlayerReceive();
+    ~FieldPlayerReceive() = default;
 
     virtual void Enter(FieldPlayer* Entity) override;
     virtual void Exit(FieldPlayer* Entity) override;

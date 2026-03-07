@@ -2,14 +2,14 @@
 #include "game/entities/soccer_ball.h"
 #include "game/goal.h"
 #include "game/soccer_team.h"
-#include "state_machine/states/prepare_kick_off.h"
+#include "state_machine/states/soccer_team_states/prepare_kick_off.h"
 #include "utils/constants.h"
 #include "utils/region.h"
 #include "utils/time_system.h"
 #include "utils/wall.h"
 #include <cstddef>
 
-SoccerPitch::SoccerPitch() : m_GoalKeeperHasBall(false), m_GameOn(false), m_GamePause(false) {
+SoccerPitch::SoccerPitch() : m_GoalKeeperHasBall(false), m_GameOn(false) {
     m_Walls = Wall::CreateWalls();
 
     Vector ball_pos = Vector((double)constants::PITCH_WIDTH / 2.0,
@@ -43,16 +43,17 @@ SoccerPitch::SoccerPitch() : m_GoalKeeperHasBall(false), m_GameOn(false), m_Game
 }
 
 void SoccerPitch::Update() {
-    if (m_GamePause)
+    if (!m_GameOn)
         return;
+
+    Timer->Update();
 
     p_Ball->Update();
 
     p_BlueTeam->Update();
     p_RedTeam->Update();
 
-    if (p_RedGoal->CheckGoal(p_Ball->Pos()) ||
-        p_BlueGoal->CheckGoal(p_Ball->Pos())) {
+    if (p_RedGoal->CheckGoal(p_Ball->Pos()) || p_BlueGoal->CheckGoal(p_Ball->Pos())) {
         m_GameOn = false;
 
         p_Ball->PlaceAtPos(Vector((double)constants::PITCH_WIDTH / 2.0,

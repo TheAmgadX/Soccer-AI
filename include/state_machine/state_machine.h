@@ -1,7 +1,6 @@
 #pragma once
 #include "state.h"
 #include <assert.h>
-#include <type_traits>
 
 template <class entity_type>
 class StateMachine {
@@ -24,9 +23,9 @@ public:
         delete p_GlobalState;
     }
 
-    entity_type *CurrentState() { return p_CurrentState; }
+    State<entity_type> *CurrentState() { return p_CurrentState; }
 
-    entity_type *GlobalState() { return p_GlobalState; }
+    State<entity_type> *GlobalState() { return p_GlobalState; }
 
     void Update() const {
         if (p_GlobalState) {

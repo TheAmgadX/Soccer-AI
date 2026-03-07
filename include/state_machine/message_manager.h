@@ -29,7 +29,7 @@ public:
         receiver->HandleMessage(message);
     }
 
-    void SendMessage(int sender, int receiver, int msg, double delay,
+    void SendMessage(int sender, int receiver, MessageEnum msg, double delay,
                      void *extra_info) {
         Message message = Message(sender, receiver, msg, delay, extra_info);
         Entity *receiverEntity = entityMgr->GetEntity(receiver);

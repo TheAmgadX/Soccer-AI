@@ -72,9 +72,13 @@ public:
 
     void Update();
 
+    TeamColor Color() const { return m_Color; }
+
     StateMachine<SoccerTeam> FSM() { return m_StateMachine; }
 
     inline SoccerPitch* Pitch() const { return p_Pitch; }
+
+    inline SoccerTeam* Opponent() const { return p_Opponent; }
 
     inline Goal* HomeGoal() const { return p_HomeGoal; }
 
@@ -84,11 +88,17 @@ public:
 
     inline Player* SupportingPlayer() const { return p_SupportingPlayer; }
 
+    inline Player* ControllingPlayer() const { return p_ControllingPlayer; }
+
     inline void SetSupportingPlayer(Player* player) { p_SupportingPlayer = player; }
 
     inline void setControllingPlayer(Player* player) { p_ControllingPlayer = player; }
 
     inline void SetReceivingPlayer(Player* player) { p_ReceivingPlayer = player; }
+
+    inline void SetClosestPlayerToBall(Player* player) { p_PlayerClosestToBall = player; }
+
+    inline Player* ClosestPlayerToBall() const { return p_PlayerClosestToBall; }
 
     bool InControl() const { return p_ControllingPlayer != nullptr; }
 
@@ -114,7 +124,7 @@ public:
     bool CanShoot(const Vector &ball_pos, const double power,
                     Vector &shotTarget) const;
 
-    void RequestPass(const Player *const requester) const;
+    void RequestPass(Player * requester) const;
 
     bool FindPass(const Player *const passer, Player *&receiver,
                     Vector &passTarget, const double power,

@@ -66,9 +66,10 @@ public:
         double diff = desired - current;
 
         while (diff > M_PI)
-        diff -= 2.0 * M_PI;
+            diff -= 2.0 * M_PI;
+
         while (diff < -M_PI)
-        diff += 2.0 * M_PI;
+            diff += 2.0 * M_PI;
 
         diff = std::clamp(diff, -maxTurn, maxTurn);
 

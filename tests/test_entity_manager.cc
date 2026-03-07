@@ -19,16 +19,16 @@ TEST(EntityManagerTest, Instance) {
 
 TEST(EntityManagerTest, AddAndGetEntity) {
     EntityManager* mgr = EntityManager::Instance();
-    
+
     TestEntityMgrImpl* e1 = new TestEntityMgrImpl();
     TestEntityMgrImpl* e2 = new TestEntityMgrImpl();
-    
-    mgr->AddEntity(e1);
-    mgr->AddEntity(e2);
-    
+
+    mgr->AddEntity(e1, e1->Id());
+    mgr->AddEntity(e2, e2->Id());
+
     EXPECT_EQ(mgr->GetEntity(e1->Id()), e1);
     EXPECT_EQ(mgr->GetEntity(e2->Id()), e2);
-    
+
     // Clean up
     delete e1;
     delete e2;
@@ -36,8 +36,8 @@ TEST(EntityManagerTest, AddAndGetEntity) {
 
 TEST(EntityManagerTest, GetNonExistentEntity) {
     EntityManager* mgr = EntityManager::Instance();
-    
+
     int invalidId = -999;
     Entity* result = mgr->GetEntity(invalidId);
-    EXPECT_EQ(result, nullptr); 
+    EXPECT_EQ(result, nullptr);
 }

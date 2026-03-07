@@ -38,9 +38,6 @@ private:
     Vector AvoidWalls();
 
 
-    // TODO: implement it when you implement the teams.
-    void FindNeighbours();
-
     inline bool On(Behaviours b) const {
         return (m_Flags & b) == b;
     }

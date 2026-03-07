@@ -2,12 +2,13 @@
 #include "game/entities/goal_keeper.h"
 #include "game/entities/field_player.h"
 #include "game/entities/player.h"
+#include "state_machine/message.h"
+#include "state_machine/states/soccer_team_states/prepare_kick_off.h"
 #include "utils/constants.h"
 #include "math/vector.h"
 #include "utils/time_system.h"
 #include "utils/utils.h"
-// #include "state_machine/message_manager.h" TODO: uncomment when the message system is done.
-
+#include "state_machine/message_manager.h"
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
@@ -19,21 +20,35 @@ SoccerTeam::~SoccerTeam() {
     }
 }
 
-// TODO: after implementing the constructor for GoalKeeper and FieldPlayer update this function.
 void SoccerTeam::CreatePlayers() {
     m_Players.reserve(constants::PLAYERS_PER_TEAM);
 
-    p_GoalKeeper = new GoalKeeper();
+    int goal_keeper_home_region;
+    std::vector<int> players_home_region;
+    players_home_region.reserve(constants::PLAYERS_PER_TEAM - 1);
+
+    switch (Color()) {
+        case RED:
+            goal_keeper_home_region = 16;
+            players_home_region = {12, 14, 9, 11};
+            break;
+        case BLUE:
+            goal_keeper_home_region = 1;
+            players_home_region = {3, 5, 6, 8};
+            break;
+    }
+
+    p_GoalKeeper = new GoalKeeper(this, goal_keeper_home_region, Vector());
     m_Players.push_back(p_GoalKeeper);
 
     for (int i = 0; i < constants::PLAYERS_PER_TEAM - 1; ++i) {
-        m_Players.emplace_back(new FieldPlayer());
+        m_Players.emplace_back(new FieldPlayer(this, players_home_region[i], Vector()));
     }
 }
 
 void SoccerTeam::Initialize(SoccerTeam* opponent) {
-    m_StateMachine = StateMachine<SoccerTeam>(this, nullptr, nullptr);
-    // TODO: after building the states set a state for the state machine.
+    m_StateMachine = StateMachine<SoccerTeam>(this, PrepareForKickOff::Instance(), nullptr);
+    m_StateMachine.CurrentState()->Enter(this);
 
     CreatePlayers();
     p_Opponent = opponent;
@@ -137,8 +152,7 @@ Vector SoccerTeam::GetBestSupportSpot() {
 
 void SoccerTeam::ReturnFieldPlayersToHome() {
     for(size_t i = 1; i < m_Players.size(); ++i) {
-        // TODO: uncomment when the message systems is complete.
-        // MsgMgr->SendMessage(constants::GAME_ID, m_Players[i]->Id(), constants::SEND_MESSAGE_NOW, Messages::RETURN_TO_HOME);
+        MsgMgr->SendMessage(constants::GAME_ID, m_Players[i]->Id(), MessageEnum::msgGotoHome, constants::SEND_MESSAGE_NOW, nullptr);
     }
 }
 
@@ -225,7 +239,7 @@ bool SoccerTeam::CanShoot(const Vector& ball_pos, const double power, Vector& sh
     return false;
 }
 
-void SoccerTeam::RequestPass(const Player *const requester) const {
+void SoccerTeam::RequestPass(Player* requester) const {
     // add condition to make the ai not perfect.
     // simulate human behavior.
     if(Utils::RandomFloatClamped() > 0.5) {
@@ -233,8 +247,7 @@ void SoccerTeam::RequestPass(const Player *const requester) const {
     }
 
     if(!IsPassSafeFromAllOpponents(requester->Pos(), requester, constants::Max_Passing_Force)) {
-        // TODO: implement message sending when finish the messaging system.
-        //MsgMgr->SendMessage(requester->Id(), p_ControllingPlayer->Id(), Messages::REQUEST_PASS, constants::SEND_MESSAGE_NOW, requester);
+        MsgMgr->SendMessage(requester->Id(), p_ControllingPlayer->Id(), MessageEnum::msgPassToMe, constants::SEND_MESSAGE_NOW, requester);
     }
 }
 

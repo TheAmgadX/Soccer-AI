@@ -11,11 +11,11 @@ public:
 
     double time;
 
-    void* extraInfo;
+    void * extraInfo;
 
     Message(): sender(-1), receiver(-1), msg(MessageEnum::msgNULL), time(0.0), extraInfo(nullptr) {}
 
-    Message(int _sender, int _receiver, MessageEnum _msg, double _time, void* _extraInfo) :
+    Message(int _sender, int _receiver, MessageEnum _msg, double _time, void * _extraInfo) :
         sender(_sender), receiver(_receiver), msg(_msg), time(_time), extraInfo(_extraInfo) {}
 };
 

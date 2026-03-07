@@ -7,7 +7,7 @@ private:
     FieldPlayerGlobal() {}
 
 public:
-    ~FieldPlayerGlobal();
+    ~FieldPlayerGlobal() = default;
 
     virtual void Enter(FieldPlayer* Entity) override;
     virtual void Exit(FieldPlayer* Entity) override;

@@ -1,6 +1,7 @@
 #pragma once
 #include "../math/vector.h"
 #include "../state_machine/message.h"
+#include "entity_manager.h"
 
 class Entity {
     int m_Id;
@@ -19,7 +20,9 @@ public:
 
     Entity() : m_Id(nextId()), m_Tag(false), m_Pos(Vector()), m_Radius(0.0) {}
 
-    Entity(Vector _pos, double _radius) : m_Id(nextId()), m_Tag(false), m_Pos(_pos), m_Radius(_radius) {}
+    Entity(Vector _pos, double _radius) : m_Id(nextId()), m_Tag(false), m_Pos(_pos), m_Radius(_radius) {
+        EntityMgr->AddEntity(this, m_Id);
+    }
 
     virtual ~Entity() {}
 
