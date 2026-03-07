@@ -25,6 +25,7 @@
 - implement soccer team states [+] 
 - implement the enitites classes [+]
 - implement all the todos in the code [+]
-- integrate the graphics with the game and move them from main.cc to proper files []
+- integrate the graphics with the game and move them from main.cc to proper files [+]
+- fix issues with the game ai logic [+]
 - fix the issue with timer (wrapping around when exceed double max value) []
 - fix memory leaks that's mentioned with todo []

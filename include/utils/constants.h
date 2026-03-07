@@ -185,9 +185,9 @@ constexpr double PLAYER_THREATENING_RANGE_SQ = 75.0 * 75.0;
 
 constexpr double PROTECT_GOAL_DISTANCE = 20.0;
 
-constexpr double KEEPER_RANGE_SQ = 5.0 * 5.0;
+constexpr double KEEPER_RANGE_SQ = 10.0 * 10.0;
 
-constexpr double INTERCEPT_RANGE_SQ = 10.0 * 10.0;
+constexpr double INTERCEPT_RANGE_SQ = 20.0 * 20.0;
 
 // --- constants for determining the best supporting spot.
 constexpr double SAFE_PASS_RATE = 5.0;
@@ -195,6 +195,7 @@ constexpr double SAFE_PASS_RATE = 5.0;
 constexpr double CAN_SHOT_RATE = 10.0;
 
 constexpr double DISTANCE_BETWEEN_PLAYERS_RATE = 1.0;
+constexpr double SUPPORT_SPOT_SEPARATION = 70.0;
 
 constexpr int NUM_OF_REGIONS_PER_ROW = 6;
 constexpr int NUM_OF_REGIONS_PER_COLUMN = 3;

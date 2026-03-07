@@ -123,6 +123,7 @@ public:
     bool InControl() const { return p_ControllingPlayer != nullptr; }
 
     void DetermineBestSupportingPlayer();
+    void UpdateSupportSpots();
 
     inline Vector BestSupportingSpot() {
         return m_BestSupportSpot;

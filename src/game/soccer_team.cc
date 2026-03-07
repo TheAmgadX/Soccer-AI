@@ -69,26 +69,37 @@ void SoccerTeam::Update() {
 
     FSM()->Update();
 
-    if (p_ControllingPlayer) {
-        DetermineBestSupportingPlayer();
-    }
+    // During kickoff reset we force all field players into home-return behavior.
+    if (FSM()->IsInState(PrepareForKickOff::Instance())) {
+        ReturnFieldPlayersToHome();
+    } else {
+        // Keep team shape: all non-active field players should return home.
+        for (size_t i = 1; i < m_Players.size(); ++i) {
+            Player *player = m_Players[i];
 
-    // Keep team shape: all non-active field players should return to home region.
-    for (size_t i = 1; i < m_Players.size(); ++i) {
-        Player *player = m_Players[i];
+            if (player == p_ControllingPlayer || player == p_PlayerClosestToBall ||
+                player == p_ReceivingPlayer || player == p_SupportingPlayer ||
+                player == p_SecondarySupportingPlayer) {
+                continue;
+            }
 
-        if (player == p_ControllingPlayer || player == p_PlayerClosestToBall ||player == p_ReceivingPlayer
-            || player == p_SupportingPlayer || player == p_SecondarySupportingPlayer) {
-            continue;
+            MsgMgr->SendMessage(constants::GAME_ID, player->Id(),
+                                MessageEnum::msgGotoHome,
+                                constants::SEND_MESSAGE_NOW, nullptr);
         }
-
-        MsgMgr->SendMessage(constants::GAME_ID, player->Id(),
-                            MessageEnum::msgGotoHome, constants::SEND_MESSAGE_NOW, nullptr);
     }
 
     for (auto &player : m_Players) {
         player->Update();
     }
+}
+
+void SoccerTeam::UpdateSupportSpots() {
+    if (!p_ControllingPlayer) {
+        return;
+    }
+
+    (void)GetBestSupportSpot();
 }
 
 void SoccerTeam::CalcClosestPlayerToBall() {
@@ -217,10 +228,17 @@ Vector SoccerTeam::GetBestSupportSpot() {
 
 Vector SoccerTeam::SupportSpotFor(const Player *player) const {
     Vector spot = m_BestSupportSpot;
-    if (player == p_SecondarySupportingPlayer) {
-        spot.y += (Color() == RED ? -30.0 : 30.0);
+
+    if (p_SupportingPlayer && p_SecondarySupportingPlayer) {
+        const double half_sep = constants::SUPPORT_SPOT_SEPARATION * 0.5;
+        if (player == p_SupportingPlayer) {
+            spot.y -= half_sep;
+        } else if (player == p_SecondarySupportingPlayer) {
+            spot.y += half_sep;
+        }
         ValidatePitchBoundaries(spot);
     }
+
     return spot;
 }
 

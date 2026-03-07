@@ -20,21 +20,26 @@
 // ---------------------------
 // ---------- Chase ----------
 // ---------------------------
-void FieldPlayerChase::Enter(FieldPlayer *entity) {
+void FieldPlayerChase::Enter(FieldPlayer *entity)
+{
   entity->Steering()->SeekOn();
 }
 
-void FieldPlayerChase::Exit(FieldPlayer *entity) {
+void FieldPlayerChase::Exit(FieldPlayer *entity)
+{
   entity->Steering()->SeekOff();
 }
 
-void FieldPlayerChase::Process(FieldPlayer *entity) {
-  if (entity->BallWithinKickingRange()) {
+void FieldPlayerChase::Process(FieldPlayer *entity)
+{
+  if (entity->BallWithinKickingRange())
+  {
     entity->FSM()->ChangeState(FieldPlayerKick::Instance());
     return;
   }
 
-  if (entity->isClosestToBall()) {
+  if (entity->isClosestToBall())
+  {
     entity->Steering()->SetTarget(entity->Ball()->Pos());
     return;
   }
@@ -45,34 +50,23 @@ void FieldPlayerChase::Process(FieldPlayer *entity) {
 // ----------------------------
 // --------- Dribble ----------
 // ----------------------------
-void FieldPlayerDribble::Enter(FieldPlayer *entity) {
+void FieldPlayerDribble::Enter(FieldPlayer *entity)
+{
   entity->Team()->setControllingPlayer(entity);
 }
 
 void FieldPlayerDribble::Exit(FieldPlayer *entity) {}
 
-void FieldPlayerDribble::Process(FieldPlayer *entity) {
-  double dot = entity->Team()->HomeGoal()->Facing().Dot(entity->Ball()->Pos());
-  Vector direction;
+void FieldPlayerDribble::Process(FieldPlayer *entity)
+{
+    Vector direction = entity->Team()->AwayGoal()->Center() - entity->Ball()->Pos();
 
-  // if the player is facing its own goal, turn around.
-  if (dot < 0.0) {
+    if (direction.LengthSQ() <= constants::Epsilon) {
+        direction = entity->Team()->AwayGoal()->Center() - entity->Pos();
+    }
 
-    direction = entity->Heading();
-    double angle = M_PI_4 * -1 *
-                   entity->Team()->HomeGoal()->Facing().Sign(entity->Heading());
-
-    VecRotateAroundOrigin(direction, angle);
-
-    const double kick_force = 0.8;
-
-    entity->Ball()->Kick(direction, kick_force);
-  } else {
-    direction = entity->Team()->HomeGoal()->Facing();
     entity->Ball()->Kick(direction, constants::MAX_DRIBBLE_FORCE);
-  }
-
-  entity->FSM()->ChangeState(FieldPlayerChase::Instance());
+    entity->FSM()->ChangeState(FieldPlayerChase::Instance());
 }
 
 // ---------------------------
@@ -82,31 +76,41 @@ void FieldPlayerGlobal::Enter(FieldPlayer *entity) {}
 
 void FieldPlayerGlobal::Exit(FieldPlayer *entity) {}
 
-void FieldPlayerGlobal::Process(FieldPlayer *entity) {
-  if (entity->BallWithinReceivingRange() && entity->isControllingPlayer()) {
+void FieldPlayerGlobal::Process(FieldPlayer *entity)
+{
+  if (entity->BallWithinReceivingRange() && entity->isControllingPlayer())
+  {
     entity->SetMaxSpeed(constants::PLAYER_MAX_SPEED_WITH_BALL);
-  } else {
+  }
+  else
+  {
     entity->SetMaxSpeed(constants::PLAYER_MAX_SPEED);
   }
 }
 
-bool FieldPlayerGlobal::onMessage(FieldPlayer *entity, const Message &msg) {
-  switch (msg.msg) {
-  case msgReceiveBall: {
-    entity->Steering()->SetTarget(*(static_cast<Vector *>(msg.extraInfo)));
+bool FieldPlayerGlobal::onMessage(FieldPlayer *entity, const Message &msg)
+{
+  switch (msg.msg)
+  {
+  case msgReceiveBall:
+  {
+    (void)msg;
+    entity->Steering()->SetTarget(entity->Ball()->Pos());
 
     entity->FSM()->ChangeState(FieldPlayerReceive::Instance());
 
     return true;
   }
 
-  case msgPassToMe: {
+  case msgPassToMe:
+  {
     FieldPlayer *receiver = static_cast<FieldPlayer *>(msg.extraInfo);
 
     // if the ball cannot be kicked or there is already another receiving
     // player.
     if (!entity->BallWithinKickingRange() ||
-        entity->Team()->ReceivingPlayer() != nullptr) {
+        entity->Team()->ReceivingPlayer() != nullptr)
+    {
       return true;
     }
 
@@ -127,7 +131,8 @@ bool FieldPlayerGlobal::onMessage(FieldPlayer *entity, const Message &msg) {
     return true;
   }
 
-  case msgGotoHome: {
+  case msgGotoHome:
+  {
     entity->SetDefaultHomeRegion();
 
     entity->FSM()->ChangeState(FieldPlayerReturnToHome::Instance());
@@ -135,8 +140,10 @@ bool FieldPlayerGlobal::onMessage(FieldPlayer *entity, const Message &msg) {
     return true;
   }
 
-  case msgSupport: {
-    if (entity->FSM()->IsInState(FieldPlayerSupport::Instance())) {
+  case msgSupport:
+  {
+    if (entity->FSM()->IsInState(FieldPlayerSupport::Instance()))
+    {
       return true;
     }
 
@@ -148,12 +155,14 @@ bool FieldPlayerGlobal::onMessage(FieldPlayer *entity, const Message &msg) {
     return true;
   }
 
-  case msgWait: {
+  case msgWait:
+  {
     entity->FSM()->ChangeState(FieldPlayerWait::Instance());
     return true;
   }
 
-  case msgNULL: {
+  case msgNULL:
+  {
     break;
   }
   }
@@ -164,19 +173,22 @@ bool FieldPlayerGlobal::onMessage(FieldPlayer *entity, const Message &msg) {
 // ---------------------------
 // ---------- Kick -----------
 // ---------------------------
-void FieldPlayerKick::Enter(FieldPlayer *entity) {
+void FieldPlayerKick::Enter(FieldPlayer *entity)
+{
   entity->Team()->SetReceivingPlayer(nullptr);
   entity->Team()->setControllingPlayer(entity);
 }
 
 void FieldPlayerKick::Exit(FieldPlayer *entity) {}
 
-void FieldPlayerKick::Process(FieldPlayer *entity) {
+void FieldPlayerKick::Process(FieldPlayer *entity)
+{
   Vector to_ball = entity->Ball()->Pos() - entity->Pos();
   double dot = entity->Heading().Dot(VecNormalize(to_ball));
 
   // if ball is behind the player, or the goal keeper has the ball
-  if (entity->Pitch()->GoalKeeperHasBall() || dot < 0) {
+  if (entity->Pitch()->GoalKeeperHasBall() || dot < 0)
+  {
     entity->FSM()->ChangeState(FieldPlayerChase::Instance());
     return;
   }
@@ -189,12 +201,14 @@ void FieldPlayerKick::Process(FieldPlayer *entity) {
   bool should_shoot = entity->Team()->CanShoot(ball_pos, power, ball_target);
 
   // Encourage attempts even when no strictly "safe" shot lane is found.
-  if (!should_shoot && Utils::Range(0.0, 1.0) < 0.20) {
+  if (!should_shoot && Utils::Range(0.0, 1.0) < 0.20)
+  {
     ball_target = entity->Team()->AwayGoal()->Center();
     should_shoot = true;
   }
 
-  if (should_shoot) {
+  if (should_shoot)
+  {
     Vector shot_direction = ball_target - entity->Ball()->Pos();
     entity->Ball()->Kick(shot_direction, power);
     entity->FSM()->ChangeState(FieldPlayerWait::Instance());
@@ -206,7 +220,8 @@ void FieldPlayerKick::Process(FieldPlayer *entity) {
 
   if (entity->isThreatened() &&
       entity->Team()->FindPass(entity, receiver, ball_target, power,
-                               constants::MIN_PASS_DISTANCE)) {
+                               constants::MIN_PASS_DISTANCE))
+  {
     Vector pass_direction = ball_target - entity->Ball()->Pos();
 
     entity->Ball()->Kick(pass_direction, power);
@@ -229,56 +244,53 @@ void FieldPlayerKick::Process(FieldPlayer *entity) {
 // ------------------------------
 // ---------- Receive -----------
 // ------------------------------
-void FieldPlayerReceive::Enter(FieldPlayer *entity) {
+void FieldPlayerReceive::Enter(FieldPlayer *entity)
+{
   entity->Team()->SetReceivingPlayer(entity);
 
-  entity->Steering()->ArriveOn();
+  entity->Steering()->SeekOn();
+  entity->Steering()->SetTarget(entity->Ball()->Pos());
 }
 
-void FieldPlayerReceive::Exit(FieldPlayer *entity) {
+void FieldPlayerReceive::Exit(FieldPlayer *entity)
+{
   entity->Team()->SetReceivingPlayer(nullptr);
 
-  entity->Steering()->ArriveOff();
+  entity->Steering()->SeekOff();
 }
 
-void FieldPlayerReceive::Process(FieldPlayer *entity) {
-  if (!entity->Team()->InControl() || entity->BallWithinReceivingRange()) {
+void FieldPlayerReceive::Process(FieldPlayer *entity)
+{
+  entity->Steering()->SetTarget(entity->Ball()->Pos());
+
+  if (entity->BallWithinReceivingRange())
+  {
     entity->FSM()->ChangeState(FieldPlayerChase::Instance());
-    return;
-  }
-
-  // if player reached the position the ball will be in.
-  if (entity->AtTarget()) {
-    entity->Steering()->ArriveOff();
-    entity->TrackBall();
-    entity->SetVelocity(Vector());
-
-    // If the pass never reaches us and ball is almost stationary, unlock the FSM.
-    if (!entity->BallWithinReceivingRange() && entity->Ball()->Speed() < 1.0) {
-      entity->FSM()->ChangeState(FieldPlayerChase::Instance());
-    }
-
-    return;
   }
 }
 
 // -------------------------------------
 // ---------- Return To Home -----------
 // -------------------------------------
-void FieldPlayerReturnToHome::Enter(FieldPlayer *entity) {
+void FieldPlayerReturnToHome::Enter(FieldPlayer *entity)
+{
   entity->Steering()->ArriveOn();
 
-  if (!entity->InHome()) {
+  if (!entity->InHome())
+  {
     entity->Steering()->SetTarget(entity->HomeRegion().Center());
   }
 }
 
-void FieldPlayerReturnToHome::Exit(FieldPlayer *entity) {
+void FieldPlayerReturnToHome::Exit(FieldPlayer *entity)
+{
   entity->Steering()->ArriveOff();
 }
 
-void FieldPlayerReturnToHome::Process(FieldPlayer *entity) {
-  if (!entity->Pitch()->GameOn()) {
+void FieldPlayerReturnToHome::Process(FieldPlayer *entity)
+{
+  if (!entity->Pitch()->GameOn())
+  {
     if (entity->InHome())
       entity->FSM()->ChangeState(FieldPlayerWait::Instance());
 
@@ -287,7 +299,8 @@ void FieldPlayerReturnToHome::Process(FieldPlayer *entity) {
 
   if (entity->isClosestToBall() &&
       entity->Team()->ReceivingPlayer() == nullptr &&
-      !entity->Pitch()->GoalKeeperHasBall()) {
+      !entity->Pitch()->GoalKeeperHasBall())
+  {
 
     entity->FSM()->ChangeState(FieldPlayerChase::Instance());
     return;
@@ -300,34 +313,41 @@ void FieldPlayerReturnToHome::Process(FieldPlayer *entity) {
 // ------------------------------
 // ---------- Support -----------
 // ------------------------------
-void FieldPlayerSupport::Enter(FieldPlayer *entity) {
+void FieldPlayerSupport::Enter(FieldPlayer *entity)
+{
   entity->Steering()->ArriveOn();
   entity->Steering()->SetTarget(entity->Team()->SupportSpotFor(entity));
 }
 
-void FieldPlayerSupport::Exit(FieldPlayer *entity) {
+void FieldPlayerSupport::Exit(FieldPlayer *entity)
+{
   entity->Steering()->ArriveOff();
   entity->Team()->ClearSupportingPlayer(entity);
 }
 
-void FieldPlayerSupport::Process(FieldPlayer *entity) {
-  if (!entity->Team()->InControl()) {
+void FieldPlayerSupport::Process(FieldPlayer *entity)
+{
+  if (!entity->Team()->InControl())
+  {
     entity->FSM()->ChangeState(FieldPlayerReturnToHome::Instance());
     return;
   }
 
-  if (entity->Team()->SupportSpotFor(entity) != entity->Steering()->Target()) {
+  if (entity->Team()->SupportSpotFor(entity) != entity->Steering()->Target())
+  {
     entity->Steering()->SetTarget(entity->Team()->SupportSpotFor(entity));
     entity->Steering()->ArriveOn();
   }
 
   Vector temp;
 
-  if (!entity->isThreatened()) {
+  if (!entity->isThreatened())
+  {
     entity->Team()->RequestPass(entity);
   }
 
-  if (entity->AtTarget()) {
+  if (entity->AtTarget())
+  {
     entity->Steering()->ArriveOff();
 
     entity->TrackBall();
@@ -343,13 +363,16 @@ void FieldPlayerWait::Enter(FieldPlayer *entity) {}
 
 void FieldPlayerWait::Exit(FieldPlayer *entity) {}
 
-void FieldPlayerWait::Process(FieldPlayer *entity) {
+void FieldPlayerWait::Process(FieldPlayer *entity)
+{
   entity->TrackBall();
 
-  if (entity->Pitch()->GameOn()) {
+  if (entity->Pitch()->GameOn())
+  {
     if (entity->isClosestToBall() &&
         entity->Team()->ReceivingPlayer() == nullptr &&
-        !entity->Pitch()->GoalKeeperHasBall()) {
+        !entity->Pitch()->GoalKeeperHasBall())
+    {
       entity->FSM()->ChangeState(FieldPlayerChase::Instance());
     }
   }
