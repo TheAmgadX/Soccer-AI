@@ -29,7 +29,7 @@ GitHub may not always preview video inline depending on client.
 
 - MP4: [docs/demo.mp4](docs/demo.mp4)
 
-<video src="docs/demo.mp4" controls width="960"></video>
+<video src="docs/demo_2x.mp4" controls width="960"></video>
 
 ## State Machine Diagrams
 ### Soccer Team
