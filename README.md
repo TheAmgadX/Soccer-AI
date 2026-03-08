@@ -6,7 +6,7 @@
 - Team tactics
 
 ## Note
-**Graphics are Vibe coded.**
+**Graphics are Developed with the aid of AI.**
 
 ## Build
 Requirements:
